@@ -12979,7 +12979,7 @@ var buffImages = alt1__WEBPACK_IMPORTED_MODULE_7__.webpackImages({
 var equipmentImages = alt1__WEBPACK_IMPORTED_MODULE_7__.webpackImages({
     offhand95: __webpack_require__(/*! ./asset/data/Augmented_Soulbound_lantern.data.png */ "./asset/data/Augmented_Soulbound_lantern.data.png"),
 });
-var inCombat = true;
+var inCombat = false;
 var checkForTarget = getSetting('checkForTarget');
 var timeUntilHide = 2;
 var checkCombatState = function () {
@@ -13071,8 +13071,9 @@ function paintCanvas(canvas) {
 }
 var maxAttempts = 10;
 function startLooping() {
+    var alwaysShowOverlayOutsideOfCombat = getSetting('activeOverlayOutsideOfCombat');
     if (getSetting('activeOverlay')) {
-        startOverlay();
+        startOverlay(alwaysShowOverlayOutsideOfCombat);
     }
     else {
         alt1.overLayContinueGroup('jobGauge');
@@ -13088,7 +13089,9 @@ function startLooping() {
         var livingDeathTracker = (document.getElementById('LivingDeathTracker'));
         var bloatTracker = (document.getElementById('BloatTracker'));
         if (buffs) {
-            //			checkCombatState();
+            if (!alwaysShowOverlayOutsideOfCombat) {
+                checkCombatState();
+            }
             if (!necrosisTracker.checked) {
                 findNecrosisCount(buffs);
             }
@@ -13163,7 +13166,8 @@ function updateLocation(e) {
     currentOverlayPosition = getSetting('overlayPosition');
     alt1.overLayClearGroup('overlayPositionHelper');
 }
-function startOverlay() {
+function startOverlay(showOverlayOutsideOfCombat) {
+    if (showOverlayOutsideOfCombat === void 0) { showOverlayOutsideOfCombat = false; }
     return __awaiter(this, void 0, void 0, function () {
         var cnv, ctx, overlay, overlayPosition, jg, jobGaugeWidth, jobGaugeHeight, data;
         return __generator(this, function (_a) {
@@ -13188,7 +13192,7 @@ function startOverlay() {
                     ctx.drawImage(overlay, 0, 0);
                     data = ctx.getImageData(0, 0, cnv.width, cnv.height);
                     alt1.overLayClearGroup('jobGauge');
-                    if (inCombat) {
+                    if (inCombat || showOverlayOutsideOfCombat) {
                         alt1.overLayImage(overlayPosition.x, overlayPosition.y, alt1__WEBPACK_IMPORTED_MODULE_7__.encodeImageString(data), data.width, 125);
                         alt1.overLayRefreshGroup('jobGauge');
                     }
@@ -13219,6 +13223,7 @@ function setDefaultSettings() {
     localStorage.setItem('nyusNecroJobGauge', JSON.stringify({
         activeConjureTimers: true,
         activeOverlay: false,
+        activeOverlayOutsideOfCombat: false,
         bloatNotchColor: '#ff0000',
         bloatScale: 100,
         bloatTracker: false,
@@ -13272,6 +13277,7 @@ function loadSettings() {
     setLivingDeathPlacement();
     setAlerts();
     setOverlay();
+    setActiveOverlayOutsideOfCombat();
     setCustomColors();
     setCustomScale();
     setLoopSpeed();
@@ -13428,6 +13434,14 @@ function setOverlay() {
     setCheckboxChecked(showOverlay);
     jobGauge.classList.toggle('overlay', Boolean(getSetting('activeOverlay')));
     showOverlay.addEventListener('change', function () {
+        location.reload();
+    });
+}
+function setActiveOverlayOutsideOfCombat() {
+    var showActiveOverlayOutsideOfCombat = document.getElementById('ActiveOverlayOutsideOfCombat');
+    setCheckboxChecked(showActiveOverlayOutsideOfCombat);
+    jobGauge.classList.toggle('overlayOutsideOfCombat', Boolean(getSetting('activeOverlayOutsideOfCombat')));
+    showActiveOverlayOutsideOfCombat.addEventListener('change', function () {
         location.reload();
     });
 }

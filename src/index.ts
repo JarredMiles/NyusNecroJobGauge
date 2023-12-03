@@ -61,7 +61,7 @@ var equipmentImages = a1lib.webpackImages({
 	offhand95: require('./asset/data/Augmented_Soulbound_lantern.data.png'),
 });
 
-let inCombat = true;
+let inCombat = false;
 let checkForTarget = getSetting('checkForTarget');
 let timeUntilHide = 2;
 let checkCombatState = () => {
@@ -166,8 +166,9 @@ function paintCanvas(canvas: HTMLCanvasElement) {
 
 let maxAttempts = 10;
 function startLooping() {
+	let alwaysShowOverlayOutsideOfCombat = getSetting('activeOverlayOutsideOfCombat');
 	if (getSetting('activeOverlay')) {
-		startOverlay();
+		startOverlay(alwaysShowOverlayOutsideOfCombat);
 	} else {
 		alt1.overLayContinueGroup('jobGauge');
 		alt1.overLayClearGroup('jobGauge');
@@ -192,8 +193,11 @@ function startLooping() {
 		let bloatTracker = <HTMLInputElement>(
 			document.getElementById('BloatTracker')
 		);
+
 		if (buffs) {
-//			checkCombatState();
+			if (!alwaysShowOverlayOutsideOfCombat) {
+				checkCombatState();
+			}
 			if (!necrosisTracker.checked) {
 				findNecrosisCount(buffs);
 			}
@@ -279,7 +283,7 @@ function updateLocation(e) {
 	alt1.overLayClearGroup('overlayPositionHelper');
 }
 
-export async function startOverlay() {
+export async function startOverlay(showOverlayOutsideOfCombat:boolean = false) {
 	let cnv = document.createElement('canvas');
 	let ctx = cnv.getContext('2d', { willReadFrequently: true });
 	let overlay = <HTMLCanvasElement>document.getElementsByTagName('canvas')[0];
@@ -303,7 +307,7 @@ export async function startOverlay() {
 		let data = ctx.getImageData(0, 0, cnv.width, cnv.height);
 
 		alt1.overLayClearGroup('jobGauge');
-		if (inCombat) {
+		if (inCombat || showOverlayOutsideOfCombat) {
 			alt1.overLayImage(
 				overlayPosition.x,
 				overlayPosition.y,
@@ -337,6 +341,7 @@ function setDefaultSettings() {
 		JSON.stringify({
 			activeConjureTimers: true,
 			activeOverlay: false,
+			activeOverlayOutsideOfCombat: false,
 			bloatNotchColor: '#ff0000',
 			bloatScale: 100,
 			bloatTracker: false,
@@ -392,6 +397,7 @@ function loadSettings() {
 	setLivingDeathPlacement();
 	setAlerts();
 	setOverlay();
+	setActiveOverlayOutsideOfCombat();
 	setCustomColors();
 	setCustomScale();
 	setLoopSpeed();
@@ -638,6 +644,15 @@ function setOverlay() {
 	setCheckboxChecked(showOverlay);
 	jobGauge.classList.toggle('overlay', Boolean(getSetting('activeOverlay')));
 	showOverlay.addEventListener('change', function () {
+		location.reload();
+	});
+}
+
+function setActiveOverlayOutsideOfCombat() {
+	let showActiveOverlayOutsideOfCombat = <HTMLInputElement>document.getElementById('ActiveOverlayOutsideOfCombat');
+	setCheckboxChecked(showActiveOverlayOutsideOfCombat);
+	jobGauge.classList.toggle('overlayOutsideOfCombat', Boolean(getSetting('activeOverlayOutsideOfCombat')));
+	showActiveOverlayOutsideOfCombat.addEventListener('change', function () {
 		location.reload();
 	});
 }
