@@ -13438,7 +13438,7 @@ function setOverlay() {
     });
 }
 function setActiveOverlayOutsideOfCombat() {
-    var showActiveOverlayOutsideOfCombat = document.getElementById('ActiveOverlayOutsideOfCombat');
+    var showActiveOverlayOutsideOfCombat = document.getElementById('AlwaysShowOverlayOutsideOfCombat');
     setCheckboxChecked(showActiveOverlayOutsideOfCombat);
     jobGauge.classList.toggle('overlayOutsideOfCombat', Boolean(getSetting('activeOverlayOutsideOfCombat')));
     showActiveOverlayOutsideOfCombat.addEventListener('change', function () {
