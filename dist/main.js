@@ -12979,7 +12979,7 @@ var buffImages = alt1__WEBPACK_IMPORTED_MODULE_7__.webpackImages({
 var equipmentImages = alt1__WEBPACK_IMPORTED_MODULE_7__.webpackImages({
     offhand95: __webpack_require__(/*! ./asset/data/Augmented_Soulbound_lantern.data.png */ "./asset/data/Augmented_Soulbound_lantern.data.png"),
 });
-var inCombat = false;
+var inCombat = true;
 var checkForTarget = getSetting('checkForTarget');
 var timeUntilHide = 2;
 var checkCombatState = function () {
@@ -13088,7 +13088,7 @@ function startLooping() {
         var livingDeathTracker = (document.getElementById('LivingDeathTracker'));
         var bloatTracker = (document.getElementById('BloatTracker'));
         if (buffs) {
-            checkCombatState();
+            //			checkCombatState();
             if (!necrosisTracker.checked) {
                 findNecrosisCount(buffs);
             }

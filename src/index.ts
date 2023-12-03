@@ -61,7 +61,7 @@ var equipmentImages = a1lib.webpackImages({
 	offhand95: require('./asset/data/Augmented_Soulbound_lantern.data.png'),
 });
 
-let inCombat = false;
+let inCombat = true;
 let checkForTarget = getSetting('checkForTarget');
 let timeUntilHide = 2;
 let checkCombatState = () => {
@@ -193,7 +193,7 @@ function startLooping() {
 			document.getElementById('BloatTracker')
 		);
 		if (buffs) {
-			checkCombatState();
+//			checkCombatState();
 			if (!necrosisTracker.checked) {
 				findNecrosisCount(buffs);
 			}
