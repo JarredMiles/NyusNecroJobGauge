@@ -649,7 +649,7 @@ function setOverlay() {
 }
 
 function setActiveOverlayOutsideOfCombat() {
-	let showActiveOverlayOutsideOfCombat = <HTMLInputElement>document.getElementById('ActiveOverlayOutsideOfCombat');
+	let showActiveOverlayOutsideOfCombat = <HTMLInputElement>document.getElementById('AlwaysShowOverlayOutsideOfCombat');
 	setCheckboxChecked(showActiveOverlayOutsideOfCombat);
 	jobGauge.classList.toggle('overlayOutsideOfCombat', Boolean(getSetting('activeOverlayOutsideOfCombat')));
 	showActiveOverlayOutsideOfCombat.addEventListener('change', function () {
